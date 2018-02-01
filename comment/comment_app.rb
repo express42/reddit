@@ -22,16 +22,17 @@ prometheus.register(comment_health_db_gauge)
 prometheus.register(comment_count)
 
 ## Schedule healthcheck function
-build_info=File.readlines('build_info.txt')
+if File.exist?('build_info.txt')
+  build_info=File.readlines('build_info.txt')
 
-scheduler = Rufus::Scheduler.new
+  scheduler = Rufus::Scheduler.new
 
-scheduler.every '3s' do
-  check = JSON.parse(healthcheck(mongo_host, mongo_port))
-  comment_health_gauge.set({ version: check['version'].strip, commit_hash: build_info[0].strip, branch: build_info[1].strip }, check['status'])
-  comment_health_db_gauge.set({ version: check['version'].strip, commit_hash: build_info[0].strip, branch: build_info[1].strip }, check['dependent_services']['commentdb'])
+  scheduler.every '3s' do
+    check = JSON.parse(healthcheck(mongo_host, mongo_port))
+    comment_health_gauge.set({ version: check['version'].strip, commit_hash: build_info[0].strip, branch: build_info[1].strip }, check['status'])
+    comment_health_db_gauge.set({ version: check['version'].strip, commit_hash: build_info[0].strip, branch: build_info[1].strip }, check['dependent_services']['commentdb'])
+  end
 end
-
 
 configure do
   db = Mongo::Client.new(["#{mongo_host}:#{mongo_port}"], database: mongo_database, heartbeat_frequency: 2)

@@ -24,20 +24,22 @@ prometheus.register(ui_health_gauge)
 prometheus.register(ui_health_post_gauge)
 prometheus.register(ui_health_comment_gauge)
 
-## Schedule healthcheck function
-build_info=File.readlines('build_info.txt')
 @@host_info=ENV['HOSTNAME']
 @@env_info=ENV['ENV']
 
-scheduler = Rufus::Scheduler.new
+## Schedule healthcheck function
+if File.exist?('build_info.txt')
+  build_info=File.readlines('build_info.txt')
 
-scheduler.every '3s' do
-  check = JSON.parse(healthcheck(post_service_host, post_service_port, comment_service_host, comment_service_port))
-  ui_health_gauge.set({ version: check['version'], commit_hash: build_info[0].strip, branch: build_info[1].strip }, check['status'])
-  ui_health_post_gauge.set({ version: check['version'], commit_hash: build_info[0].strip, branch: build_info[1].strip }, check['dependent_services']['post'])
-  ui_health_comment_gauge.set({ version: check['version'], commit_hash: build_info[0].strip, branch: build_info[1].strip }, check['dependent_services']['comment'])
+  scheduler = Rufus::Scheduler.new
+
+  scheduler.every '3s' do
+    check = JSON.parse(healthcheck(post_service_host, post_service_port, comment_service_host, comment_service_port))
+    ui_health_gauge.set({ version: check['version'], commit_hash: build_info[0].strip, branch: build_info[1].strip }, check['status'])
+    ui_health_post_gauge.set({ version: check['version'], commit_hash: build_info[0].strip, branch: build_info[1].strip }, check['dependent_services']['post'])
+    ui_health_comment_gauge.set({ version: check['version'], commit_hash: build_info[0].strip, branch: build_info[1].strip }, check['dependent_services']['comment'])
+  end
 end
-
 
 configure do
   enable :sessions
