@@ -6,6 +6,7 @@ gem 'bson_ext'
 gem 'bcrypt'
 gem 'puma'
 gem 'mongo'
+gem 'json'
 
 group :development do
     gem 'capistrano',         require: false
