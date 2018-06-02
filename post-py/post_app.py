@@ -50,10 +50,15 @@ def http_transport(encoded_span):
     # The collector expects a thrift-encoded list of spans. Instead of
     # decoding and re-encoding the already thrift-encoded message, we can just
     # add header bytes that specify that what follows is a list of length 1.
-    body = '\x0c\x00\x00\x00\x01' + str(encoded_span)
-    requests.post(ZIPKIN_URL, data=body,
-                  headers={'Content-Type': 'application/x-thrift'})
-
+    body = b'\x0c\x00\x00\x00\x01' + encoded_span
+    try:
+        requests.post(ZIPKIN_URL, data=body,
+              headers={'Content-Type': 'application/x-thrift'})
+    except requests.exceptions.RequestException:
+        tb = traceback.format_exc()
+        log.error('zipkin_error',
+          service='post',
+          traceback=tb)
 
 # Prometheus endpoint
 @app.route('/metrics')
