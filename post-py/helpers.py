@@ -30,7 +30,8 @@ def http_healthcheck_handler(mongo_host, mongo_port, version):
 
 
 def log_event(event_type, name, message, params={}):
-    request_id = request.headers['Request-Id']
+    request_id = request.headers['Request-Id'] \
+        if 'Request-Id' in request.headers else None
     if event_type == 'info':
         log.info(name, service='post', request_id=request_id,
                  message=message, params=params)
