@@ -15,6 +15,7 @@ POST_SERVICE_HOST ||= ENV['POST_SERVICE_HOST'] || '127.0.0.1'
 POST_SERVICE_PORT ||= ENV['POST_SERVICE_PORT'] || '4567'
 COMMENT_SERVICE_HOST ||= ENV['COMMENT_SERVICE_HOST'] || '127.0.0.1'
 COMMENT_SERVICE_PORT ||= ENV['COMMENT_SERVICE_PORT'] || '4567'
+ZIPKIN_ENABLED ||= ENV['ZIPKIN_ENABLED'] || false
 POST_URL ||= "http://#{POST_SERVICE_HOST}:#{POST_SERVICE_PORT}"
 COMMENT_URL ||= "http://#{COMMENT_SERVICE_HOST}:#{COMMENT_SERVICE_PORT}"
 
@@ -24,7 +25,19 @@ BUILD_INFO = File.readlines('build_info.txt')
 @@host_info=ENV['HOSTNAME']
 @@env_info=ENV['ENV']
 
+# Zipkin opts
+set :zipkin_enabled, ZIPKIN_ENABLED
+zipkin_config = {
+    service_name: 'ui_app',
+    service_port: 9292,
+    sample_rate: 1,
+    sampled_as_boolean: false,
+    log_tracing: true,
+    json_api_host: 'http://zipkin:9411/api/v1/spans'
+  }
+
 configure do
+  # https://github.com/openzipkin/zipkin-ruby#sending-traces-on-incoming-requests
   http_client = Faraday.new do |faraday|
     faraday.use ZipkinTracer::FaradayHandler
     faraday.request :url_encoded # form-encode POST params
@@ -37,6 +50,10 @@ configure do
   set :logging, false
   set :mylogger, Logger.new(STDOUT)
   enable :sessions
+end
+
+if settings.zipkin_enabled?
+  use ZipkinTracer::RackHandler, zipkin_config
 end
 
 # create and register metrics
