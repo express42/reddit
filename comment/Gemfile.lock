@@ -1,0 +1,50 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    bson (4.3.0)
+    bson_ext (1.5.1)
+    et-orbi (1.1.6)
+      tzinfo
+    fugit (1.1.6)
+      et-orbi (~> 1.1, >= 1.1.6)
+      raabro (~> 1.1)
+    mongo (2.6.2)
+      bson (>= 4.3.0, < 5.0.0)
+    mustermann (1.0.3)
+    prometheus-client (0.8.0)
+      quantile (~> 0.2.1)
+    puma (3.12.0)
+    quantile (0.2.1)
+    raabro (1.1.6)
+    rack (2.0.6)
+    rack-protection (2.0.4)
+      rack
+    rufus-scheduler (3.5.2)
+      fugit (~> 1.1, >= 1.1.5)
+    sinatra (2.0.4)
+      mustermann (~> 1.0)
+      rack (~> 2.0)
+      rack-protection (= 2.0.4)
+      tilt (~> 2.0)
+    thread_safe (0.3.6)
+    tilt (2.0.9)
+    tzinfo (1.2.5)
+      thread_safe (~> 0.1)
+    tzinfo-data (1.2018.7)
+      tzinfo (>= 1.0.0)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  bson_ext
+  mongo
+  prometheus-client
+  puma
+  rack (>= 2.0.6)
+  rufus-scheduler
+  sinatra (~> 2.0.2)
+  tzinfo-data
+
+BUNDLED WITH
+   1.17.2

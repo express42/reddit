@@ -1,0 +1,10 @@
+source 'https://rubygems.org'
+
+gem 'sinatra', '~> 2.0.2'
+gem 'bson_ext'
+gem 'mongo'
+gem 'puma'
+gem 'prometheus-client'
+gem "rack", '>= 2.0.6'
+gem 'rufus-scheduler'
+gem 'tzinfo-data'
