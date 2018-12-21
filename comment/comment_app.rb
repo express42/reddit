@@ -13,8 +13,17 @@ COMMENT_DATABASE ||= ENV['COMMENT_DATABASE'] || 'test'
 DB_URL ||= "mongodb://#{COMMENT_DATABASE_HOST}:#{COMMENT_DATABASE_PORT}"
 
 # App version and build info
-VERSION ||= File.read('VERSION').strip
-BUILD_INFO = File.readlines('build_info.txt')
+if File.exist?('VERSION')
+  VERSION ||= File.read('VERSION').strip
+else
+  VERSION ||= "version_missing"
+end
+
+if File.exist?('build_info.txt')
+  BUILD_INFO = File.readlines('build_info.txt')
+else
+  BUILD_INFO = Array.new(2, "build_info_missing")
+end
 
 configure do
   Mongo::Logger.logger.level = Logger::WARN

@@ -20,8 +20,18 @@ POST_URL ||= "http://#{POST_SERVICE_HOST}:#{POST_SERVICE_PORT}"
 COMMENT_URL ||= "http://#{COMMENT_SERVICE_HOST}:#{COMMENT_SERVICE_PORT}"
 
 # App version and build info
-VERSION ||= File.read('VERSION').strip
-BUILD_INFO = File.readlines('build_info.txt')
+if File.exist?('VERSION')
+  VERSION ||= File.read('VERSION').strip
+else
+  VERSION ||= "version_missing"
+end
+
+if File.exist?('build_info.txt')
+  BUILD_INFO = File.readlines('build_info.txt')
+else
+  BUILD_INFO = Array.new(2, "build_info_missing")
+end
+
 @@host_info=ENV['HOSTNAME']
 @@env_info=ENV['ENV']
 
