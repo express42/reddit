@@ -151,7 +151,7 @@ post '/new/?' do
       flash_success('Post successuly published')
       log_event('info', 'post_create', 'Successfully created a post', params)
     end
-    redirect '/'
+    redirect back
   else
     flash_danger('Invalid URL')
     log_event('warning', 'post_create', 'Invalid URL', params)
