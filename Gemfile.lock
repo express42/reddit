@@ -32,7 +32,7 @@ GEM
     net-scp (1.2.1)
       net-ssh (>= 2.6.5)
     net-ssh (4.1.0)
-    puma (3.10.0)
+    puma (3.12.6)
     rack (2.0.5)
     rack-protection (2.0.2)
       rack
