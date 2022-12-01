@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'sinatra', '~> 2.0.1'
+gem 'sinatra', '~> 2.2.3'
 gem 'haml'
 gem 'bson_ext'
 gem 'bcrypt'
